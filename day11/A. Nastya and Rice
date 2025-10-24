@@ -1,0 +1,27 @@
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int t = sc.nextInt();
+        while (t-- > 0) {
+            long n = sc.nextLong();
+            long a = sc.nextLong();
+            long b = sc.nextLong();
+            long c = sc.nextLong();
+            long d = sc.nextLong();
+
+            long minRice = n * (a - b);
+            long maxRice = n * (a + b);
+            long minPack = c - d;
+            long maxPack = c + d;
+
+            if (minRice <= maxPack && maxRice >= minPack) {
+                System.out.println("Yes");
+            } else {
+                System.out.println("No");
+            }
+        }
+        sc.close();
+    }
+}
