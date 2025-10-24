@@ -1,0 +1,33 @@
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        long a = sc.nextLong();
+        long b = sc.nextLong();
+        List<Long> path = new ArrayList<>();
+
+        // We'll go backwards: from b to a
+        while (b > a) {
+            path.add(b);
+            if (b % 2 == 0) {
+                b /= 2; // reverse of multiplying by 2
+            } else if (b % 10 == 1) {
+                b /= 10; // reverse of appending 1
+            } else {
+                break; // cannot go further back
+            }
+        }
+
+        if (b == a) {
+            path.add(a);
+            Collections.reverse(path);
+            System.out.println("YES");
+            System.out.println(path.size());
+            for (long x : path) System.out.print(x + " ");
+            System.out.println();
+        } else {
+            System.out.println("NO");
+        }
+    }
+}
