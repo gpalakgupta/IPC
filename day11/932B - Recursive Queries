@@ -1,0 +1,42 @@
+import java.util.*;
+
+public class Main {
+    static int[] g = new int[1000001];
+    static int[][] prefix = new int[10][1000001];
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        precompute();
+
+        int Q = sc.nextInt();
+        StringBuilder sb = new StringBuilder();
+
+        while (Q-- > 0) {
+            int l = sc.nextInt();
+            int r = sc.nextInt();
+            int k = sc.nextInt();
+            sb.append(prefix[k][r] - prefix[k][l - 1]).append('\n');
+        }
+        System.out.print(sb);
+    }
+
+    static void precompute() {
+        for (int i = 1; i <= 1000000; i++) {
+            g[i] = getG(i);
+            for (int k = 1; k <= 9; k++) {
+                prefix[k][i] = prefix[k][i - 1] + (g[i] == k ? 1 : 0);
+            }
+        }
+    }
+
+    static int getG(int x) {
+        if (x < 10) return x;
+        int prod = 1;
+        while (x > 0) {
+            int d = x % 10;
+            if (d != 0) prod *= d;
+            x /= 10;
+        }
+        return getG(prod);
+    }
+}
