@@ -1,0 +1,96 @@
+import java.util.*;
+import java.math.*;
+
+public class Main {
+    static final long MOD = 998244353;
+    static final long PHI = MOD - 1;  // for exponent arithmetic
+    static final long G = 3;          // primitive root for MOD
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int k = sc.nextInt();
+        long[] b = new long[k];
+        for (int i = 0; i < k; i++) b[i] = sc.nextLong() % PHI;
+        long n = sc.nextLong(), m = sc.nextLong();
+
+        if (n < k) {
+            if (m == 1) System.out.println(1);
+            else System.out.println(-1);
+            return;
+        }
+
+        // Construct characteristic polynomial matrix
+        long[][] M = new long[k][k];
+        for (int i = 0; i < k; i++) M[0][i] = b[i];
+        for (int i = 1; i < k; i++) M[i][i - 1] = 1;
+
+        // compute exponent sum via matrix exponentiation
+        long[][] P = matPow(M, n - k, PHI);
+
+        // sum of first row gives exponent multiplier for fk (since others are 1)
+        long exp = P[0][k - 1] % PHI;
+
+        // now fk^exp ≡ m (mod MOD)
+        long fk = modRoot(m, exp, MOD);
+        System.out.println(fk);
+    }
+
+    static long[][] matMul(long[][] A, long[][] B, long mod) {
+        int n = A.length;
+        long[][] C = new long[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                long sum = 0;
+                for (int k = 0; k < n; k++)
+                    sum = (sum + A[i][k] * B[k][j]) % mod;
+                C[i][j] = sum;
+            }
+        }
+        return C;
+    }
+
+    static long[][] matPow(long[][] A, long exp, long mod) {
+        int n = A.length;
+        long[][] res = new long[n][n];
+        for (int i = 0; i < n; i++) res[i][i] = 1;
+        while (exp > 0) {
+            if ((exp & 1) == 1) res = matMul(res, A, mod);
+            A = matMul(A, A, mod);
+            exp >>= 1;
+        }
+        return res;
+    }
+
+    // modular root solving (using discrete log)
+    static long modRoot(long m, long exp, long mod) {
+        long inv = modInverse(exp % (mod - 1), mod - 1);
+        if (inv == -1) return -1;
+        return modPow(m, inv, mod);
+    }
+
+    static long modPow(long a, long e, long mod) {
+        long r = 1;
+        a %= mod;
+        while (e > 0) {
+            if ((e & 1) == 1) r = (r * a) % mod;
+            a = (a * a) % mod;
+            e >>= 1;
+        }
+        return r;
+    }
+
+    static long modInverse(long a, long mod) {
+        long g = gcd(a, mod);
+        if (g != 1) return -1;
+        return modPow(a, mod - 2, mod);
+    }
+
+    static long gcd(long a, long b) {
+        while (b != 0) {
+            long t = a % b;
+            a = b;
+            b = t;
+        }
+        return a;
+    }
+}
