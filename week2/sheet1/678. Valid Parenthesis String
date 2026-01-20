@@ -1,0 +1,36 @@
+class Solution {
+    public boolean checkValidString(String s) {
+        int n = s.length();
+        Boolean[][] dp = new Boolean[n][n];
+        return helper(s,0,0,dp);
+    }
+    public boolean helper(String str, int idx, int open, Boolean[][] dp){
+        if(idx >= str.length()){
+            return open == 0;
+        }
+        if(dp[idx][open] != null){
+            return dp[idx][open];
+        }
+        char ch = str.charAt(idx);
+        boolean res = false;
+        if(ch == '('){
+            res |= helper(str,idx+1,open+1,dp);
+        }
+        else if(ch == ')'){
+            if(open > 0){
+                res |= helper(str,idx+1,open-1,dp);
+            }
+            else{
+                return false;
+            }
+        }
+        else if(ch == '*'){
+            res |= helper(str,idx+1,open+1,dp);
+            res |= helper(str,idx+1,open,dp);
+            if(open > 0){
+                res |= helper(str,idx+1,open-1,dp);
+            }
+        }
+        return  dp[idx][open] = res;
+    }
+}
