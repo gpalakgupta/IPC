@@ -1,0 +1,30 @@
+class Solution {
+    public int[] nextGreaterElement(int[] nums1, int[] nums2) {
+        return nge(nums1,nums2);
+    }
+    public int[] nge(int[] nums1, int[] nums2){
+        Stack<Integer> st = new Stack<>();
+        int n = nums2.length;
+        int[] ans = new int[n];
+        for(int i = 0; i<n; i++){
+            while(!st.isEmpty() && nums2[st.peek()] < nums2[i]){
+                ans[st.pop()] = nums2[i];
+            }
+            st.push(i);
+        }
+        while(!st.isEmpty()){
+            ans[st.pop()] = -1;
+        }
+
+        HashMap<Integer,Integer> map = new HashMap<>();
+        for(int i = 0; i<n; i++){
+            map.put(nums2[i],ans[i]);
+        }
+
+        int[] res = new int[nums1.length];
+        for(int i = 0; i<nums1.length; i++){
+            res[i] = map.get(nums1[i]);
+        }
+        return res;
+    }
+}
