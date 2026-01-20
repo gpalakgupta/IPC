@@ -1,0 +1,19 @@
+class Solution {
+    // Function to delete middle element of a stack.
+    public void deleteMid(Stack<Integer> s) {
+        // code here
+        int n = s.size();
+        int mid = (n+1)/2;
+        mid = (n%2 == 0) ? mid+1: mid;
+        solve(s,mid);
+    }
+    public void solve(Stack<Integer> st, int k){
+        if(k == 1){
+            st.pop();
+            return;
+        }
+        int temp = st.pop();
+        solve(st,k-1);
+        st.push(temp);
+    }
+}
